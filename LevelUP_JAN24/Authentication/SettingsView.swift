@@ -7,12 +7,42 @@
 
 import SwiftUI
 
+@MainActor
+final class SettingsViewModal: ObservableObject {
+        
+    
+    func signOut() throws {
+         try AuthenticationManager.shared.signOut()
+    }
+}
+
 struct SettingsView: View {
+    
+    @StateObject private var viewModel = SettingsViewModal()
+    @Binding var showSignInView: Bool
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List{
+            Button("Log Out"){
+                Task {
+                    do {
+                        try viewModel.signOut()
+                        showSignInView = true
+                    } catch {
+                        print(error)
+                    }
+                    
+                }
+                //
+                UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+            }
+        }
+        .navigationTitle("Settings")
     }
 }
 
 #Preview {
-    SettingsView()
+    NavigationStack {
+        SettingsView(showSignInView: .constant(false))
+    }
 }

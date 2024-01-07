@@ -8,11 +8,38 @@
 import SwiftUI
 
 struct AuthenticationView: View {
+    
+    @State private var isSignInEmailViewActive = false
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack{
+            
+            NavigationLink{
+                SignInEmailView()
+               
+            } 
+        label: {
+                Text("Sign In With Email")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(height :55)
+                    .frame(maxWidth: 350)
+                    .background(Color.blue)
+                    .cornerRadius(10)
+//                    .onTapGesture {
+//                        //UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+//                    }
+                    
+            }
+            Spacer()
+            
+        }
+        .navigationTitle("Sign In")
     }
 }
 
 #Preview {
-    AuthenticationView()
+    NavigationStack{
+        AuthenticationView()
+    }
 }
