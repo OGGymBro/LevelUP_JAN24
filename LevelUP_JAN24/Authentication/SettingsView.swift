@@ -12,7 +12,14 @@ final class SettingsViewModal: ObservableObject {
         
     //load users email in SettingsViewModeal to reset pwd
     
+    @Published var authProviders: [AuthProviderOption] = []
     
+    func loadAuthProviders(){
+        if let providers = try? AuthenticationManager.shared.getProviders(){
+            authProviders = providers
+        }
+            
+    }
     
     func signOut() throws {
          try AuthenticationManager.shared.signOut()
@@ -58,10 +65,15 @@ struct SettingsView: View {
                 }
                 UIImpactFeedbackGenerator(style: .soft).impactOccurred()
             }
+            if viewModel.authProviders.contains(.email){
+                emailSection
+            }
             
-            emailSection
            
             
+        }
+        .onAppear{
+            viewModel.loadAuthProviders()
         }
         .navigationTitle("Settings")
     }

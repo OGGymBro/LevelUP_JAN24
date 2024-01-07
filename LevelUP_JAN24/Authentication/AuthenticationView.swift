@@ -6,9 +6,23 @@
 //
 
 import SwiftUI
+import GoogleSignIn
+import GoogleSignInSwift
+
+
+@MainActor
+final class AuthenticationViewModel :ObservableObject{
+    
+    func signInGoogle() async throws {
+        let helper = SignInGoogleHelper()
+        let tokens = try await helper.signIn()
+        try await AuthenticationManager.shared.signInWithGoogle(tokens: tokens)
+    }
+}
 
 struct AuthenticationView: View {
     
+    @StateObject private var viewModel = AuthenticationViewModel()
     @Binding var showSignInView: Bool
     
     @State private var isSignInEmailViewActive = false
@@ -19,8 +33,7 @@ struct AuthenticationView: View {
             NavigationLink{
                 SignInEmailView(showSignInView: $showSignInView)
                
-            } 
-        label: {
+            } label: {
                 Text("Sign In With Email")
                     .font(.headline)
                     .foregroundColor(.white)
@@ -28,13 +41,25 @@ struct AuthenticationView: View {
                     .frame(maxWidth: 350)
                     .background(Color.blue)
                     .cornerRadius(10)
-//                    .onTapGesture {
-//                        //UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-//                    }
-                    
             }
-            Spacer()
             
+            GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .dark, style: .wide, state: .normal)) {
+                Task {
+                    do {
+                        try await viewModel.signInGoogle()
+                        showSignInView = false
+                    } catch {
+                        print(error)
+                    }
+                }
+            }
+            .frame(height :55)
+            .frame(width:350)
+            .cornerRadius(10)
+            
+            
+            Spacer()
+//
         }
         .navigationTitle("Sign In")
     }
