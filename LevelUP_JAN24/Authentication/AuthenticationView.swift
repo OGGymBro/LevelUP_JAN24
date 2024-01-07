@@ -9,13 +9,15 @@ import SwiftUI
 
 struct AuthenticationView: View {
     
+    @Binding var showSignInView: Bool
+    
     @State private var isSignInEmailViewActive = false
     
     var body: some View {
         VStack{
             
             NavigationLink{
-                SignInEmailView()
+                SignInEmailView(showSignInView: $showSignInView)
                
             } 
         label: {
@@ -40,6 +42,6 @@ struct AuthenticationView: View {
 
 #Preview {
     NavigationStack{
-        AuthenticationView()
+        AuthenticationView(showSignInView: .constant(false))
     }
 }
