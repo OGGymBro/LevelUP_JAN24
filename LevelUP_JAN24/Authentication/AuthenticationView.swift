@@ -30,6 +30,15 @@ struct AuthenticationView: View {
     var body: some View {
         VStack{
             
+            Image("LUP")
+                .resizable()
+                .frame(width: 150, height: 150)
+                .cornerRadius(75) // Half of the width/height to make it a circle
+                .shadow(color: Color.black.opacity(0.4), radius: 5, x: 0, y: 2) // Add a shadow
+                .overlay(Circle().stroke(Color.white, lineWidth: 4)) // Add a white border
+                .padding(.vertical)
+            
+            
             NavigationLink{
                 SignInEmailView(showSignInView: $showSignInView)
                
